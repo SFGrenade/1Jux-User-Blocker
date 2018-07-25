@@ -12,5 +12,5 @@ You can get Tempermonkey from here:
 Recommended Version: v4.6 by Jan Biniok
 
 ### How to install
-Open this Link: https://github.com/Tandashi/Speedrun-Chat/raw/master/chat.user.js  
+Open this Link: https://github.com/SFGrenade/1Jux-User-Blocker/raw/master/1jux_user_blocker.user.js  
 Then click on install.
