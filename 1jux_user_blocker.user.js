@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.2.3
+// @version      0.2.4
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -92,6 +92,8 @@ function show_blocked_users() {
         JUX.ajax.fill();
         var ajax_window = document.getElementById("ajax");
 
+        ajax_window.innerHTML = "";
+
         var heading = document.createElement("h2");
         heading.textContent = "1Jux User Blocker";
         heading.style.textAlign = "center";
@@ -108,9 +110,21 @@ function show_blocked_users() {
             }
         });
 
+        var close_button = document.createElement("span");
+        close_button.style.color = "white";
+        close_button.style.backgroundColor = "red";
+        close_button.textContent = "close";
+        close_button.title = "Close window";
+        close_button.style.cursor = "pointer";
+        close_button.onclick = function() {
+            show_blocked_users(username);
+            return false;
+        }
+
         ajax_window.appendChild(heading);
         ajax_window.appendChild(subheading);
         ajax_window.appendChild(user_list);
+        ajax_window.appendChild(close_button);
         expanded = true;
     } else {
         JUX.ajax.close();
