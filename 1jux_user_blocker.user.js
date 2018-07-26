@@ -133,8 +133,6 @@ function update_page() {
         var username = username_area.getElementsByClassName("username")[0].text;
 
         if (username_area.getElementsByClassName("user_blocker_button").length < 1) {
-            var tmp_title = title_element.textContent;
-            title_element.textContent = "[Blocked] " + tmp_title;
             username_area.appendChild(make_block_button(username));
         }
 
