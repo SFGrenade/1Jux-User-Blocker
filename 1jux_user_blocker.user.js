@@ -119,7 +119,6 @@ function show_blocked_users() {
 }
 
 function update_page() {
-    console.log("update page");
     var posts = document.getElementsByClassName("post-item");
 
     for (var i = 0; i < posts.length; i++) {
