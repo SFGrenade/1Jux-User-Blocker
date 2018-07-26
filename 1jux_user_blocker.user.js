@@ -117,7 +117,7 @@ function show_blocked_users() {
         close_button.title = "Close window";
         close_button.style.cursor = "pointer";
         close_button.onclick = function() {
-            show_blocked_users(username);
+            show_blocked_users();
             return false;
         }
 
