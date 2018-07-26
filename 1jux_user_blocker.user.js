@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.2.4
+// @version      0.2.5
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -48,7 +48,7 @@ function unblock_user(username) {
         return "User already unblocked!";
     }
 
-    blocked_users.splice(blocked_users.indexOf(username));
+    blocked_users.splice(blocked_users.indexOf(username), 1);
 
     blocked_users_string = blocked_users.join(user_string_delimer);
     GM_setValue("BLOCKED_USERS", blocked_users_string);
