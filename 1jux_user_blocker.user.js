@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.1.4
+// @version      0.2
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -81,6 +81,9 @@ function make_block_button(username) {
 function make_list_entry(username) {
     var entry = document.createElement("li");
     entry.appendChild(make_block_button(username));
+    var username_text = document.createElement("p");
+    username_text.textContent = username;
+    entry.appendChild(username_text);
     return entry;
 }
 
@@ -92,11 +95,13 @@ function show_blocked_users() {
         var heading = document.createElement("h2");
         heading.textContent = "1Jux User Blocker";
         heading.style.textAlign = "center";
+
         var subheading = document.createElement("h4");
         subheading.textContent = "Version " + VERSION + " (by " + AUTHOR + ")";
         subheading.style.textAlign = "center";
 
         var user_list = document.createElement("ul");
+        user_list.style.width = "100%";
         blocked_users.forEach(function(entry) {
             if (entry != "") {
                 user_list.appendChild(make_list_entry(entry));
@@ -120,20 +125,24 @@ function update_page() {
     for (var i = 0; i < posts.length; i++) {
         // post-item -> l-post-box
         var post_box = posts[i].getElementsByClassName("l-post-box")[0];
+        // l-post-box -> l-jux-down-title -> title
+        var title_element = post_box.getElementsByClassName("l-jux-down-title")[0].getElementsByClassName("title")[0];
         // l-post-box -> l-post-head-container -> l-post-head -> l-jux-down-tags
         var username_area = post_box.getElementsByClassName("l-post-head-container")[0].getElementsByClassName("l-post-head")[0].getElementsByClassName("l-jux-down-tags")[0];
         // l-jux-down-tags -> username class object -> text
         var username = username_area.getElementsByClassName("username")[0].text;
 
         if (username_area.getElementsByClassName("user_blocker_button").length < 1) {
+            var tmp_title = title_element.textContent;
+            title_element.textContent = "[Blocked] " + tmp_title;
             username_area.appendChild(make_block_button(username));
         }
 
         if (arrayContains(username, blocked_users)) {
-            post_box.getElementsByClassName("post-image").forEach(function(entry) {
+            Array.prototype.forEach.call(post_box.getElementsByClassName("post-image"), entry => {
                 entry.style.display = "none";
             });
-            post_box.getElementsByClassName("simple-button").forEach(function(entry) {
+            Array.prototype.forEach.call(post_box.getElementsByClassName("simple-button"), entry => {
                 entry.style.display = "none";
             });
         }
