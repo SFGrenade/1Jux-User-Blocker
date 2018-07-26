@@ -57,12 +57,21 @@ function unblock_user(username) {
 
 function make_block_button(username) {
     var button = document.createElement("span");
+    button.className = "user_blocker_button";
     if (arrayContains(username, blocked_users)) {
         button.textContent = "Unblock";
         button.style.color = "green";
+        button.onclick = function() {
+            unblock_user(username);
+            return false;
+        }
     } else {
         button.textContent = "Block";
         button.style.color = "red";
+        button.onclick = function() {
+            block_user(username);
+            return false;
+        }
     }
     button.title = button.textContent + " " + username;
     button.style.cursor = "pointer";
@@ -82,8 +91,10 @@ function show_blocked_users() {
 
         var heading = document.createElement("h2");
         heading.textContent = "1Jux User Blocker";
-        heading.appendChild(document.createElement("h4"));
-        heading.lastChild.textContent = "Version " + VERSION + " (by " + AUTHOR + ")"
+        heading.style.textAlign = "center";
+        var subheading = document.createElement("h4");
+        subheading.textContent = "Version " + VERSION + " (by " + AUTHOR + ")";
+        subheading.style.textAlign = "center";
 
         var user_list = document.createElement("ul");
         blocked_users.forEach(function(entry) {
@@ -91,8 +102,10 @@ function show_blocked_users() {
                 user_list.appendChild(make_list_entry(entry));
             }
         });
-        ajax_window.appendChild(user_list);
 
+        ajax_window.appendChild(heading);
+        ajax_window.appendChild(subheading);
+        ajax_window.appendChild(user_list);
         expanded = true;
     } else {
         JUX.ajax.close();
@@ -106,9 +119,15 @@ function update_page() {
 
     for (var i = 0; i < posts.length; i++) {
         // post-item -> l-post-box
-        var post_box = posts[i].children[1];
-        // l-post-box -> l-post-head-container -> l-post-head -> l-jux-down-tags -> username class object -> text
-        var username = post_box.firstChild.firstChild.children[2].getElementsByClassName("username")[0].text;
+        var post_box = posts[i].getElementsByClassName("l-post-box")[0];
+        // l-post-box -> l-post-head-container -> l-post-head -> l-jux-down-tags
+        var username_area = post_box.getElementsByClassName("l-post-head-container")[0].getElementsByClassName("l-post-head")[0].getElementsByClassName("l-jux-down-tags")[0];
+        // l-jux-down-tags -> username class object -> text
+        var username = username_area.getElementsByClassName("username")[0].text;
+
+        if (username_area.getElementsByClassName("user_blocker_button").length < 1) {
+            username_area.appendChild(make_block_button(username));
+        }
 
         if (arrayContains(username, blocked_users)) {
             post_box.getElementsByClassName("post-image").forEach(function(entry) {
@@ -117,8 +136,6 @@ function update_page() {
             post_box.getElementsByClassName("simple-button").forEach(function(entry) {
                 entry.style.display = "none";
             });
-        } else {
-
         }
     }
 };
