@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.2.2
+// @version      0.2.3
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -133,7 +133,10 @@ function update_page() {
         var username = username_area.getElementsByClassName("username")[0].text;
 
         if (username_area.getElementsByClassName("user_blocker_button").length < 1) {
-            username_area.appendChild("<span class=\"seperator\">·</span>");
+            var tmp_span = document.createElement("span");
+            tmp_span.className = "seperator";
+            tmp_span.textContent = "·";
+            username_area.appendChild(tmp_span);
             username_area.appendChild(document.createTextNode());
             username_area.appendChild(make_block_button(username));
         }
