@@ -2,13 +2,11 @@
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
 // @version      0.1.3
-// @description  Hide posts based on a list of usernames
+// @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
-// @match        https://de.1jux.net/*
-// @match        https://en.1jux.net/*
-// @match        http://de.1jux.net/*
-// @match        http://en.1jux.net/*
+// @match        *://de.1jux.net/*
+// @match        *://en.1jux.net/*
 
 // @homepage    https://github.com/SFGrenade/1Jux-User-Blocker
 // @downloadURL https://github.com/SFGrenade/1Jux-User-Blocker/raw/master/1jux_user_blocker.user.js
@@ -25,7 +23,8 @@ const VERSION = GM_info.script.version;
 const AUTHOR = "SFGrenade";
 
 const user_string_delimer = " !,! ";
-var blocked_users = GM_getValue("BLOCKED_USERS", "");
+var blocked_users_string = GM_getValue("BLOCKED_USERS", "");
+var blocked_users = blocked_users_string.split(user_string_delimer);
 var expanded = false;
 
 function arrayContains(needle, arrhaystack) {
@@ -36,31 +35,42 @@ function block_user(username) {
     if (arrayContains(username, blocked_users)) {
         return "User already blocked!";
     }
-    blocked_users += ((blocked_users === "") ? "" : user_string_delimer) + username;
-    GM_setValue("BLOCKED_USERS", blocked_users);
+
+    blocked_users.push(username);
+
+    blocked_users_string = blocked_users.join(user_string_delimer);
+    GM_setValue("BLOCKED_USERS", blocked_users_string);
+    return "User successfully blocked!";
 }
 
 function unblock_user(username) {
     if (!arrayContains(username, blocked_users)) {
         return "User already unblocked!";
     }
-    //var tmp = blocked_users.split(user_string_delimer + username);
-    var tmp = ("A____" + user_string_delimer + "B___" + user_string_delimer + "CCCC").split(user_string_delimer + username);
-    var new_block = "";
-    tmp.forEach(function(entry) {
-        new_block += entry;
-    });
-    return new_block;
-}
-console.log(unblock_user("CCCC"));
-console.log(unblock_user("B___"));
-console.log(unblock_user("A____"));
 
-function make_button(username, colour_string) {
+    blocked_users.splice(blocked_users.indexOf(username));
+
+    blocked_users_string = blocked_users.join(user_string_delimer);
+    GM_setValue("BLOCKED_USERS", blocked_users_string);
+    return "User successfully unblocked!";
+}
+
+function make_block_button(username) {
     var button = document.createElement("span");
-    button.textContent = (arrayContains(username, blocked_users) ? "Unblock" : "Block");
+    if (arrayContains(username, blocked_users)) {
+        button.textContent = "Unblock";
+        button.style.color = "green";
+    } else {
+        button.textContent = "Block";
+        button.style.color = "red";
+    }
     button.title = button.textContent + " " + username;
     return button;
+}
+
+function make_list_entry(username) {
+    var entry = document.createElement("<li>");
+    entry.appendChild(make_block_button(username));
 }
 
 function show_blocked_users() {
@@ -68,6 +78,11 @@ function show_blocked_users() {
         JUX.ajax.fill();
         var ajax_window = document.getElementById("ajax");
         ajax_window.style.color = "red";
+
+        var user_list = document.createElement("<ul>");
+        blocked_users.forEach(function(entry) {
+            user_list.appendChild(make_list_entry(entry));
+        });
     } else {
         JUX.ajax.close();
     }
