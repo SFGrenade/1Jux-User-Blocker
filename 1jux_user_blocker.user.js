@@ -137,7 +137,7 @@ function update_page() {
             tmp_span.className = "seperator";
             tmp_span.textContent = "·";
             username_area.appendChild(tmp_span);
-            username_area.appendChild(document.createTextNode());
+            username_area.appendChild(document.createTextNode(""));
             username_area.appendChild(make_block_button(username));
         }
 
