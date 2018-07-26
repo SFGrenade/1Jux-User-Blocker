@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.1.3
+// @version      0.1.4
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -65,26 +65,38 @@ function make_block_button(username) {
         button.style.color = "red";
     }
     button.title = button.textContent + " " + username;
+    button.style.cursor = "pointer";
     return button;
 }
 
 function make_list_entry(username) {
-    var entry = document.createElement("<li>");
+    var entry = document.createElement("li");
     entry.appendChild(make_block_button(username));
+    return entry;
 }
 
 function show_blocked_users() {
     if (!expanded) {
         JUX.ajax.fill();
         var ajax_window = document.getElementById("ajax");
-        ajax_window.style.color = "red";
 
-        var user_list = document.createElement("<ul>");
+        var heading = document.createElement("h2");
+        heading.textContent = "1Jux User Blocker";
+        heading.appendChild(document.createElement("h4"));
+        heading.lastChild.textContent = "Version " + VERSION + " (by " + AUTHOR + ")"
+
+        var user_list = document.createElement("ul");
         blocked_users.forEach(function(entry) {
-            user_list.appendChild(make_list_entry(entry));
+            if (entry != "") {
+                user_list.appendChild(make_list_entry(entry));
+            }
         });
+        ajax_window.appendChild(user_list);
+
+        expanded = true;
     } else {
         JUX.ajax.close();
+        expanded = false;
     }
 }
 
