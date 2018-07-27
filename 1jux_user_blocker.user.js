@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.2.5
+// @version      0.2.6
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -80,8 +80,8 @@ function make_block_button(username) {
 
 function make_list_entry(username) {
     var entry = document.createElement("li");
-    entry.appendChild(make_block_button(username));
     var username_text = document.createElement("p");
+    username_text.appendChild(make_block_button(username));
     username_text.textContent = username;
     entry.appendChild(username_text);
     return entry;
@@ -103,7 +103,8 @@ function show_blocked_users() {
         subheading.style.textAlign = "center";
 
         var user_list = document.createElement("ul");
-        user_list.style.width = "100%";
+        user_list.style.width = "90%";
+        user_list.style.display = "inline-block";
         blocked_users.forEach(function(entry) {
             if (entry != "") {
                 user_list.appendChild(make_list_entry(entry));
