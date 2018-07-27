@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1Jux User Blocker
 // @namespace    https://1jux.net
-// @version      0.2.6
+// @version      0.2.7
 // @description  Blocks users' posts and maybe other stuff sometime
 // @author       SFGrenade
 
@@ -80,10 +80,18 @@ function make_block_button(username) {
 
 function make_list_entry(username) {
     var entry = document.createElement("li");
+
+    entry.appendChild(make_block_button(username));
+    entry.firstChild.style.display = "inline-block";
+
+    entry.appendChild(document.createTextNode(" "));
+
     var username_text = document.createElement("p");
-    username_text.appendChild(make_block_button(username));
     username_text.textContent = username;
+    username_text.style.display = "inline-block";
     entry.appendChild(username_text);
+
+    entry.style.display = "block";
     return entry;
 }
 
@@ -91,20 +99,18 @@ function show_blocked_users() {
     if (!expanded) {
         JUX.ajax.fill();
         var ajax_window = document.getElementById("ajax");
-
+        ajax_window.style.textAlign = "center";
         ajax_window.innerHTML = "";
 
         var heading = document.createElement("h2");
         heading.textContent = "1Jux User Blocker";
-        heading.style.textAlign = "center";
 
         var subheading = document.createElement("h4");
         subheading.textContent = "Version " + VERSION + " (by " + AUTHOR + ")";
-        subheading.style.textAlign = "center";
 
         var user_list = document.createElement("ul");
-        user_list.style.width = "90%";
-        user_list.style.display = "inline-block";
+        user_list.style.textAlign = "center";
+        user_list.style.width = "86%";
         blocked_users.forEach(function(entry) {
             if (entry != "") {
                 user_list.appendChild(make_list_entry(entry));
